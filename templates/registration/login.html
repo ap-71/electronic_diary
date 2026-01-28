@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid place-items-center min-h-screen">
+  <div class="w-full max-w-md px-4">
+    <div class="card hover-lift mb-5">
+      <div class="card-body p-5">
+        <div class="text-center mb-5">
+          <i class="fas fa-user-circle text-primary display-3"></i>
+          <h3 class="fw-bold mt-4">Вход в систему</h3>
+          <p class="text-muted">Введите свои данные для авторизации</p>
+        </div>
+        
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="mb-4">
+            <label for="username-input" class="form-label">Логин</label>
+            <input type="text" name="username" class="form-control" id="username-input" placeholder="Логин" required>
+          </div>
+          
+          <div class="mb-4">
+            <label for="password-input" class="form-label">Пароль</label>
+            <input type="password" name="password" class="form-control" id="password-input" placeholder="Пароль" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary w-100 hover-grow">
+            <i class="fas fa-sign-in-alt me-2"></i>Войти
+          </button>
+        </form>
+        
+        {% if form.errors %}
+          <div class="alert alert-error mt-4 fade-in">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Неправильное имя пользователя или пароль
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load grade_tags %}
+
+{% block title %}Детали оценки{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Детали оценки</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Ученик:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ grade.student.full_name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Предмет:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ grade.subject.name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Оценка:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="badge bg-{{ grade.value|grade_color }} px-3 py-2">{{ grade.value }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Дата:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ grade.date|date:"d.m.Y" }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Учитель:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ grade.teacher.full_name }}
+                        </div>
+                    </div>
+                    
+                    {% if grade.comment %}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Комментарий:</strong>
+                        </div>
+                        <div class="col-md-8">
+                            {{ grade.comment }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'my_grades' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад к списку оценок
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!-- templates/journal/home.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="grid place-items-center min-vh-70">
+  <div class="text-center max-w-2xl w-full px-4">
+    {% if user.is_authenticated and user.teacher %}
+      <div class="mb-4">
+        <a href="{% url 'add_grade' %}" class="btn btn-primary">
+          <i class="fas fa-plus me-2"></i>Поставить оценку
+        </a>
+      </div>
+    {% endif %}
+    
+    <div class="card p-5 hover-lift mb-5">
+      <div class="card-body text-center">
+        <i class="fas fa-book-open text-primary display-4 mb-4"></i>
+        <h1 class="display-4 fw-bold mb-4">Электронный дневник</h1>
+        <p class="lead mb-4">Современная система управления учебным процессом с интуитивным интерфейсом и удобными инструментами отслеживания успеваемости</p>
+        
+        {% if user.is_authenticated %}
+          <div class="mt-4">
+            <h3>Добро пожаловать, {{ user.username }}!</h3>
+            <p class="text-muted">Вы вошли в систему как {% if user.student %}ученик{% elif user.teacher %}учитель{% else %}родитель{% endif %}</p>
+            
+            <div class="mt-4 d-flex flex-column flex-md-row justify-content-center gap-3">
+              <a href="{% url 'my_grades' %}" class="btn btn-outline">
+                <i class="fas fa-graduation-cap me-2"></i>Мои оценки
+              </a>
+            </div>
+          </div>
+        {% else %}
+          <div class="mt-4">
+            <p class="text-muted">Пожалуйста, войдите в систему, чтобы получить доступ к своим данным</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">
+              <i class="fas fa-sign-in-alt me-2"></i>Войти в систему
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Информационные карточки -->
+    <div class="grid grid-cols-1-sm grid-cols-1 gap-sm mt-4">
+      <div class="card hover-lift">
+        <div class="card-body text-center">
+          <i class="fas fa-chart-line text-success display-5 mb-3"></i>
+          <h5 class="card-title">Отслеживание прогресса</h5>
+          <p class="card-text text-muted small">Мониторьте успеваемость в реальном времени</p>
+        </div>
+      </div>
+      
+      <div class="card hover-lift">
+        <div class="card-body text-center">
+          <i class="fas fa-bell text-info display-5 mb-3"></i>
+          <h5 class="card-title">Уведомления</h5>
+          <p class="card-text text-muted small">Будьте в курсе последних событий</p>
+        </div>
+      </div>
+      
+      <div class="card hover-lift">
+        <div class="card-body text-center">
+          <i class="fas fa-users text-primary display-5 mb-3"></i>
+          <h5 class="card-title">Коммуникация</h5>
+          <p class="card-text text-muted small">Связывайтесь с учителями и родителями</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

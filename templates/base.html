@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Электронный дневник{% endblock %}</title>
+  {% load static %}
+  <!-- Современные стили -->
+  <link rel="stylesheet" href="{% static 'css/modern-design.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+  <!-- Иконки Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+  </style>
+</head>
+<body id="root-container" class="page-transition">
+  <!-- Обертка для темной/светлой темы -->
+  <div id="app-container" data-theme="dark">
+    
+    <nav class="navbar">
+      <div class="container">
+        <div class="flex justify-between items-center">
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-book-reader me-2"></i>Дневник
+          </a>
+          
+          <div class="navbar-nav flex items-center gap-md">
+            {% if user.is_authenticated %}
+              <span class="navbar-text me-3">Привет, {{ user.username }}!</span>
+              
+              <!-- Кнопка переключения темы -->
+              <button id="theme-toggle" class="btn btn-outline rounded-circle p-2" aria-label="Переключить тему">
+                <i class="fas fa-moon" id="theme-icon"></i>
+              </button>
+              
+              <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline">Выйти</button>
+              </form>
+            {% else %}
+              <a class="btn btn-outline" href="{% url 'login' %}">Войти</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-5">
+      <div class="messages-container mb-4">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} fade-in" role="alert">
+              <i class="fas fa-info-circle me-2"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {% block content %}
+      {% endblock %}
+    </main>
+    
+  </div>
+
+  <script>
+    // Логика переключения темы
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const appContainer = document.getElementById('app-container');
+      const rootContainer = document.getElementById('root-container');
+      
+      // Проверяем сохраненную тему или предпочитаемую пользователем
+      const savedTheme = localStorage.getItem('theme') ||
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      
+      // Устанавливаем начальную тему
+      if (savedTheme === 'dark') {
+        appContainer.setAttribute('data-theme', 'dark');
+        rootContainer.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
+      } else {
+        appContainer.setAttribute('data-theme', 'light');
+        rootContainer.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fas fa-moon';
+      }
+      
+      // Переключение темы при клике
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = rootContainer.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        appContainer.setAttribute('data-theme', newTheme);
+        rootContainer.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Обновляем иконку
+        if (newTheme === 'dark') {
+          themeIcon.className = 'fas fa-sun';
+        } else {
+          themeIcon.className = 'fas fa-moon';
+        }
+      });
+      
+      // Анимация элементов при загрузке
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      // Применяем анимацию к элементам
+      document.querySelectorAll('.card, .table, .alert').forEach(el => {
+        el.classList.add('scroll-reveal');
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>

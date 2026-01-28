@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load grade_tags %}
+{% block content %}
+<div class="mb-5">
+  <div class="d-flex justify-content-between align-items-start">
+    <div>
+      <div style="display: flex; justify-content: space-between;">
+      <h2 class="display-6 fw-bold mb-3">
+        {% if request.user.student %}
+          Мои оценки
+        {% else %}
+          Оценки детей
+        {% endif %}
+      </h2>
+      {% if request.user.teacher %}
+        <div><a href="{% url 'add_grade' %}" class="btn btn-primary hover-grow ms-4">
+          <i class="fas fa-plus me-2"></i>Поставить оценку
+        </a>
+        </div>
+      {% endif %}
+      </div>
+      <p class="text-muted">Последние изменения в учебном процессе</p>
+    </div>
+  </div>
+</div>
+
+{% if grades %}
+  <!-- Статистика -->
+  <div class="grid grid-cols-1-sm grid-cols-2-md grid-cols-4 gap-md mb-4">
+    <div class="card text-center hover-lift d-flex flex-column" style="height: 100%;">
+      <div class="card-body p-3 flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <h5 class="text-primary mb-1">{{ grades.count }}</h5>
+        <p class="text-muted small mb-0">Всего оценок</p>
+      </div>
+    </div>
+    
+    <div class="card text-center hover-lift d-flex flex-column" style="height: 100%;">
+      <div class="card-body p-3 flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <h5 class="text-success mb-1">
+          {{ grades|dictsort:"value"|last|default:"-" }}
+        </h5>
+        <p class="text-muted small mb-0">Лучшая оценка</p>
+      </div>
+    </div>
+    
+    <div class="card text-center hover-lift d-flex flex-column" style="height: 100%;">
+      <div class="card-body p-3 flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <h5 class="text-info mb-1">{{ grades|length|default:"0" }}</h5>
+        <p class="text-muted small mb-0">За месяц</p>
+      </div>
+    </div>
+    
+    <div class="card text-center hover-lift d-flex flex-column" style="height: 100%;">
+      <div class="card-body p-3 flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <h5 class="text-warning mb-1">{{ subjects_count|default:"0" }}</h5>
+        <p class="text-muted small mb-0">Предметов</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card mb-5">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              {% if not request.user.student %}
+                <th class="text-uppercase text-muted small">Ученик</th>
+              {% endif %}
+              <th class="text-uppercase text-muted small">Предмет</th>
+              <th class="text-uppercase text-muted small">Оценка</th>
+              <th class="text-uppercase text-muted small">Дата</th>
+              <th class="text-uppercase text-muted small">Учитель</th>
+              <th class="text-uppercase text-muted small">Комментарий</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in grades %}
+            <tr class="slide-in" data-grade-id="{{ g.id }}" style="cursor: pointer;">
+              {% if not request.user.student %}
+                <td>{{ g.student.full_name }}</td>
+              {% endif %}
+              <td>{{ g.subject.name }}</td>
+              <td>
+                <span class="badge bg-{{ g.value|grade_color }} px-3 py-2">{{ g.value }}</span>
+              </td>
+              <td>{{ g.date|date:"d.m.Y" }}</td>
+              <td>{{ g.teacher.full_name }}</td>
+              <td>{{ g.comment|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Добавляем обработчик кликов для строк таблицы
+      const rows = document.querySelectorAll('tbody tr.slide-in');
+      rows.forEach(row => {
+        row.addEventListener('click', function() {
+          const gradeId = this.getAttribute('data-grade-id');
+          if (gradeId) {
+            window.location.href = '{% url "grade_detail" 0 %}'.replace('0', gradeId);
+          }
+        });
+      });
+    });
+  </script>
+{% else %}
+  <div class="card text-center py-5 mb-5">
+    <div class="card-body">
+      <i class="fas fa-clipboard-list display-5 text-muted mb-3"></i>
+      <h5 class="card-title">Оценок пока нет</h5>
+      <p class="card-text text-muted">Здесь будут отображаться ваши оценки после того, как они будут выставлены</p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -43,6 +43,7 @@ db.sqlite3
 # Flask stuff:
 instance/
 .webassets-cache
+.tmp/
 
 # Scrapy stuff:
 .scrapy

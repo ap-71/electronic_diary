@@ -16,41 +16,11 @@
 
 ## Скриншоты
 
-<div style="position: relative; width: 100%; overflow: hidden;">
-  <div id="carousel" style="display: flex; transition: transform 0.5s ease-in-out;">
-    <img src="img/1.png" alt="Image 1" style="width: 100%; flex-shrink: 0;">
-    <img src="img/2.png" alt="Image 2" style="width: 100%; flex-shrink: 0;">
-    <img src="img/3.png" alt="Image 3" style="width: 100%; flex-shrink: 0;">
-    <img src="img/4.png" alt="Image 4" style="width: 100%; flex-shrink: 0;">
-    <img src="img/5.png" alt="Image 5" style="width: 100%; flex-shrink: 0;">
-  </div>
-  <button onclick="prevSlide()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">❮</button>
-  <button onclick="nextSlide()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">❯</button>
-</div>
-
-<script>
-  let currentIndex = 0;
-  const carousel = document.getElementById('carousel');
-  const images = carousel.querySelectorAll('img');
-  const totalImages = images.length;
-
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalImages;
-    updateCarousel();
-  }
-
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-    updateCarousel();
-  }
-
-  function updateCarousel() {
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-  }
-
-  // Автоматическое переключение каждые 3 секунды
-  setInterval(nextSlide, 3000);
-</script>
+![1](img/1.png)
+![2](img/2.png)
+![3](img/3.png)
+![4](img/4.png)
+![5](img/5.png)
 
 ## Структура проекта
 
